@@ -1,0 +1,77 @@
+﻿# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: thaiabc
+  name: 泰文字母输入法
+  version: "0.1"
+  author:
+    - Liu HW
+  description: |
+    Thai Input in ISO
+    泰语文字转写输入法
+    如果想省略声调的话，请使用者自行按照下方speller和translator部分的注释操作！
+  dependencies:
+    - thaiabc
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 泰文, 西文 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - speller
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - abc_segmentor
+    - fallback_segmentor
+  translators:
+    - table_translator
+
+speller:
+  alphabet: "ZYXWVUTSRQPONMLKJIHGFEDCBAɛɤɔŋʔ¹²³⁴⁵:;'zyxwvutsrqponmlkjihgfedcba"
+  delimiter: "'"
+  algebra:
+    - xform/ɛ/E/
+    - xform/ɤ/;/
+    - xform/ɔ/O/
+    - xform/ŋ/ng/
+    - xform/ɯ/:/
+# 如果想省略声调的话，需要三步操作。
+# 第一步，需要在以下五行前面添加#号（shift+3），让他们无法起作用。
+    - xform/¹/y/
+    - xform/²/z/
+    - xform/³/q/
+    - xform/⁴/x/
+    - xform/⁵/v/
+# 第二步，去掉本行以下五行前面的#号，然后跳转到下方translator部分的第三步。
+#    - xform/¹//
+#    - xform/²//
+#    - xform/³//
+#    - xform/⁴//
+#    - xform/⁵//
+
+translator:
+  dictionary: thaiabc
+  enable_completion: true
+  preedit_format:
+    - xform/E/ɛ/
+    - xform/;/ɤ/
+    - xform/O/ɔ/
+    - xform/ng/ŋ/
+    - xform/:/ɯ/
+# 第三步，在以下五行前面加上#号，省略声调输入的操作即可完成。
+    - xform/y/¹/
+    - xform/z/²/
+    - xform/q/³/
+    - xform/x/⁴/
+    - xform/v/⁵/
+
+style:
+  page_size: 10
+  font_size: 20
